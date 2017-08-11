@@ -1,12 +1,12 @@
-# Nextflow + Docker tutorial 
+# Nextflow tutorial 
 
-This repository contains the tutorial material for the *Parallel distributed computational workflows
-with Nextflow and Docker containers* course. 
+This repository contains the tutorial material for the [Nextflow workshop](https://www.nextflow.io/blog/2017/nextflow-workshop.html). 
 
 ## Prerequisite
 
 * Java 7 or 8 
 * Docker engine 1.10.x (or higher) 
+* Singularity 2.3.x (optional)
 
 ## Installation 
 
@@ -26,7 +26,7 @@ mv nextflow $HOME/bin
 Finally, clone this repository with the following command: 
 
 ```
-git clone https://github.com/nextflow-io/< ADD URL HERE>
+git clone git@github.com:nextflow-io/hack17-course.git && cd hack17-course
 ```
 
 ## Nextflow hands-on 
@@ -55,7 +55,7 @@ nextflow run script1.nf --reads this/and/that
 
 #### Exercise 1.1 
 
-Modify the `script1.nf` to accept a fourth parameter named `outdir` set to s default path
+Modify the `script1.nf` to accept a fourth parameter named `outdir` set to the default path
 which will define used as the pipeline output directory. 
 
 #### Exercise 1.2 
@@ -63,6 +63,8 @@ which will define used as the pipeline output directory.
 Modify the `script1.nf` to print all the pipeline parameters by using a single `println` 
 command and a [multiline string](https://www.nextflow.io/docs/latest/script.html#multi-line-strings)
 statement.  
+
+Tip: see an example [here](https://github.com/nextflow-io/rnaseq-nf/blob/master/main.nf#L41-L48).
 
 #### Recap 
 
@@ -102,7 +104,7 @@ Add the command line option `-with-docker` to launch the execution through a Doc
 as shown below: 
 
 ```
-nextflow run script.nf -with-docker
+nextflow run script2.nf -with-docker
 ```
 
 This time it works because it uses the Docker container `nextflow/rnaseq-nf` defined in the 
@@ -116,12 +118,16 @@ docker.enabled = true
 
 #### Exercise 2.1 
 
-Print the output of the `index_ch` channel by using the [println](https://www.nextflow.io/docs/latest/operator.html#println)
-operator (do not confuse it with the `println` statement seen previously).
+Enable the Docker execution by default adding the above setting in the `nextflow.config` file.
 
 #### Exercise 2.2 
 
-Use the command `tree -a work` to see out Nextflow organises the process work directory 
+Print the output of the `index_ch` channel by using the [println](https://www.nextflow.io/docs/latest/operator.html#println)
+operator (do not confuse it with the `println` statement seen previously).
+
+#### Exercise 2.3 
+
+Use the command `tree -a work` to see out Nextflow organises the process work directory. 
 
  
 #### Recap 
@@ -167,7 +173,6 @@ Try it again specifying different read files by using a glob pattern:
 nextflow run script3.nf --reads 'data/ggal/*_{1,2}.fq'
 ```
 
-
 #### Exercise 3.1 
 
 Use the [set](https://www.nextflow.io/docs/latest/operator.html#set) operator in place 
@@ -192,18 +197,26 @@ In this step you have learned:
 
 The script `script4.nf` adds the `quantification` process. 
 
-In this script note as the `index_ch` channel declared as output in the `index` process, 
+In this script note as the `index_ch` channel, declared as output in the `index` process, 
 is now used as a channel in the input section.  
 
-Also note as the second input is declared as a `set` composed by two 
-components: the `pair_id` and the `reads` to match the structure of the items emitted 
+Also note as the second input is declared as a `set` composed by two components: 
+the `pair_id` and the `reads` in order to match the structure of the items emitted 
 by the `read_pairs_ch` channel.
 
 
 Execute it by using the following command: 
 
 ```
-nextflow run script4.nf -resume
+nextflow run script4.nf 
+```
+
+You will see the execution of a `quantication` process. 
+
+Execute it again adding the `-resume` option as shown below: 
+
+```
+nextflow run script4.nf -resume 
 ```
 
 The `-resume` option skips the execution of any step that has been processed in a previous 
@@ -218,10 +231,15 @@ nextflow run script4.nf -resume --reads 'data/ggal/*_{1,2}.fq'
 You will noticed that the `quantification` process is executed more than 
 one time. 
 
+Nextflow parallelise the execution of your pipeline simply by providing multiple input data
+in your script.
+
+
 #### Exercise 4.1 
 
 Add a [tag](https://www.nextflow.io/docs/latest/process.html#tag) directive to the 
-`quantification` process to provide a more readable execution log 
+`quantification` process to provide a more readable execution log .
+
 
 #### Exercise 4.2 
 
@@ -247,7 +265,7 @@ read pairs which are provided to the `quantification` steps
 You can run it by using the following command: 
 
 ```
-nextflow run script5.nf -resume --reads 'data/ggal/*_{1,2}.fq' 
+nextflow run script5.nf -resume 
 ``` 
 
 The script will report the following error message: 
@@ -262,12 +280,15 @@ Channel `read_pairs_ch` has been used twice as an input by process `fastqc` and 
 Modify the creation of the `read_pairs_ch` channel by using a [into](https://www.nextflow.io/docs/latest/operator.html#into) 
 operator in place of a `set`.  
 
+Tip: see an example [here](https://github.com/nextflow-io/rnaseq-nf/blob/master/main.nf#L58).
+
 
 #### Recap 
 
 In this step you have learned: 
 
 1. How to use the `into` operator to create multiple copies of the same channel
+
 
 ### Step 6 - MultiQC report 
 
@@ -281,7 +302,7 @@ Execute the script with the following command:
 nextflow run script6.nf -resume --reads 'data/ggal/*_{1,2}.fq' 
 ```
 
-It creates the final report in the `result` folder in the current work directory. 
+It creates the final report in the `results` folder in the current work directory. 
 
 In this script note the use of the [mix](https://www.nextflow.io/docs/latest/operator.html#mix) 
 and [collect](https://www.nextflow.io/docs/latest/operator.html#collect) operators chained 
@@ -313,4 +334,62 @@ when the script completes.
 Try to run it by using the following command: 
 
 ```
-nextflow run script7.nf  -resume --reads 'data/ggal/*_{1,2}.fq'
+nextflow run script7.nf -resume --reads 'data/ggal/*_{1,2}.fq'
+```
+
+
+### Step 8 - Custom scripts
+
+
+Real world pipelines use a lot of custom user scripts (BASH, R, Python, etc). Nextflow 
+allows you to use and manage all these scripts in consistent manner. Simply put them 
+in a directory named `bin` in the pipeline project root. They will be automatically added 
+to the pipeline execution `PATH`. 
+
+For example, create a file named `fastqc.sh` with the following content: 
+
+```
+#!/bin/bash 
+set -e 
+set -u
+
+sample_id=${1}
+reads=${2}
+
+mkdir fastqc_${sample_id}_logs
+fastqc -o fastqc_${sample_id}_logs -f fastq -q ${reads}
+```
+
+Save it, grant the execute permission and move it under the `bin` directory as shown below: 
+
+```
+chmod +x fastqc.sh
+mkdir -p bin 
+mv fastqc.sh bin
+```
+
+Then, open the `script7.nf` file and replace the `fastqc` process' script with  
+the following code: 
+
+```
+  script:
+    """
+    fastqc.sh "$sample_id" "$reads"
+    """  
+```
+
+
+Run it as before: 
+
+```
+nextflow run script7.nf -resume --reads 'data/ggal/*_{1,2}.fq'
+```
+
+#### Recap 
+
+In this step you have learned: 
+
+1. How write or use existing custom script in your Nextflow pipeline.
+2. How avoid the use of absolute paths having your script in the `bin/` project folder.
+
+
