@@ -314,3 +314,60 @@ Try to run it by using the following command:
 
 ```
 nextflow run script7.nf  -resume --reads 'data/ggal/*_{1,2}.fq'
+```
+
+
+### Step 8 - Custom scripts
+
+
+Real world pipelines use a lot of custom user scripts (BASH, R, Python, etc). Nextflow 
+allows you to use and manage all these scripts in consistent manner. Simply put them 
+in a directory named `bin` in the pipeline project root. They will be automatically added 
+to the pipeline execution `PATH`. 
+
+For example, create a file named `fastqc.sh` with the following content: 
+
+```
+#!/bin/bash 
+set -e 
+set -u
+
+sample_id=${1}
+reads=${2}
+
+mkdir fastqc_${sample_id}_logs
+fastqc -o fastqc_${sample_id}_logs -f fastq -q ${reads}
+```
+
+Save it, grant the execute permission and move it under the `bin` directory as shown below: 
+
+```
+chmod +x fastqc.sh
+mkdir -p bin 
+mv fastqc.sh bin
+```
+
+Then, open the `script7.nf` file and replace the `fastqc` process' script with  
+the following code: 
+
+```
+  script:
+    """
+    fastqc.sh "$sample_id" "$reads"
+    """  
+```
+
+
+Run it as before: 
+
+```
+nextflow run script.nf -resume --reads 'data/ggal/*_{1,2}.fq'
+```
+
+#### Recap 
+
+In this step you have learned: 
+
+1. How write or use existing custom script in your Nextflow pipeline.
+2. How avoid the use of absolute paths having your script in the `bin/` project folder.
+
