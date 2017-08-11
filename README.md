@@ -393,3 +393,210 @@ In this step you have learned:
 2. How avoid the use of absolute paths having your script in the `bin/` project folder.
 
 
+
+## Docker hands-on 
+
+Get practice with basic Docker commands to pull, run and build your own containers.
+ 
+A container is a ready-to-run Linux environment which can be executed in an isolated 
+manner from the hosting system. It has own copy of the file system, processes space,
+memory management, etc. 
+ 
+Containers are a Linux feature known as *Control Groups* or [Ccgroups](https://en.wikipedia.org/wiki/Cgroups)
+introduced with kernel 2.6. 
+
+Docker adds to this concept an handy management tool to build, run and share container images. 
+
+These images can be uploaded and published in a centralised repository know as 
+[Docker Hub](https://hub.docker.com), or hosted by other parties like for example [Quay](https://quay.io).
+
+
+### Step 1 - Run a container 
+
+Run a container is easy as using the following command: 
+
+```
+docker run <container-name> 
+```
+
+For example: 
+
+```
+docker run hello-world  
+```
+
+### Step 2 - Pull a container 
+
+The pull command allows you to download a Docker image without running it. For example: 
+
+```
+docker pull debian:wheezy 
+```
+
+The above command download a Debian Linux image.
+
+
+### Step 3 - Run a container in interactive mode 
+
+Launching a BASH shell in the container allows you to operate in an interactive mode 
+in the containerised operating system. For example: 
+
+```
+docker run -it debian:wheezy bash 
+``` 
+
+Once launched the container you wil noticed that's running as root (!). 
+Use the usual commands to navigate in the file system.
+
+To exit from the container, stop the BASH session with the exit command.
+
+### Step 4 - Your first Dockerfile
+
+Docker images are created by using a so called `Dockerfile` i.e. a simple text file 
+containing a list of commands to be executed to assemble and configure the image
+with the software packages required.    
+
+In this step you will create a Docker image containing the Samtools and Bowtie2 tools.
+
+In order to build a Docker image, start creating an empty directory eg. 
+`~/docker-tutorial` and change to it: 
+
+```
+mkdir -p ~/docker-tutorial && cd ~/docker-tutorial 
+```
+
+Warning: the Docker build process automatically copies all files that are located in the 
+current directory to the Docker daemon in order to create the image. This can take 
+a lot of time when big/many files exist. For this reason it's important to *always* work in 
+a directory containing only the files you really need to include in your Docker image. 
+Alternatively you can use the `.dockerignore` file to select the path to exclude from the build. 
+
+Then use your favourite editor eg. `vim` to create a file named `Dockerfile` and copy the 
+following content: 
+
+```
+FROM debian:wheezy 
+
+MAINTAINER <your name>
+
+RUN apt-get update && apt-get install -y curl
+   
+RUN curl -sSL https://github.com/COMBINE-lab/salmon/releases/download/v0.8.2/Salmon-0.8.2_linux_x86_64.tar.gz | tar xz \
+ && mv /Salmon-*/bin/* /usr/bin/ \
+ && mv /Salmon-*/lib/* /usr/lib/
+```
+
+When done save the file. 
+
+
+### Step 5 - Build the image  
+
+Build the Docker image by using the following command: 
+
+```
+docker build -t my-image .
+```
+
+Note: don't miss the dot in the above command. When it completes, verify that the image 
+has been created listing all available images: 
+
+```
+docker images
+```
+
+### Step 6 - Add a software package to the image
+
+Add the Bowtie package to the Docker image by adding to the `Dockerfile` the following snippet: 
+
+```
+RUN wget --no-check-certificate -O bowtie.zip https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.7/bowtie2-2.2.7-linux-x86_64.zip/download && \
+  unzip bowtie.zip -d /opt/ && \
+  ln -s /opt/bowtie2-2.2.7/ /opt/bowtie && \
+  rm bowtie.zip 
+
+ENV PATH $PATH:/opt/bowtie2-2.2.7/
+```
+
+Save the file and build again the image with the same command as before: 
+
+```
+docker build -t my-image .
+```
+
+You will notice that it creates a new Docker image with the same name *but* with a 
+different image ID. 
+
+### Step 7 - Run Salmon in the container 
+
+Check that everything is fine running Salmon in the container as shown below: 
+
+```
+docker run my-image salmon --version
+```
+
+You can even launch a container in an interactive mode by using the following command: 
+
+```
+docker run -it my-image bash
+```
+
+
+### Step 8 - File system mounts
+
+Create an genome index file by running Bowtie in the container. 
+
+Try to run Bowtie in the container with the following command: 
+
+```
+docker run my-image \
+  salmon index -t $HOME/projects/hack17-course/data/ggal/ggal_1_48850000_49020000.Ggal71.500bpflank.fa -i index
+```
+
+The above command fails because Bowtie cannot access the input file.
+
+This happens because the container runs in a complete separate file system and 
+it cannot access the hosting file system by default. 
+
+You will need to use the `--volume` command line option to mount the input file(s) eg. 
+
+```
+docker run --volume $HOME/projects/hack17-course/data/ggal/ggal_1_48850000_49020000.Ggal71.500bpflank.fa:/transcriptome.fa my-image \
+  salmon index -t /transcriptome.fa -i index 
+```
+
+An easier way is to mount a parent directory to an identical one in the container, 
+this allows you to use the same path when running it in the container eg. 
+
+```
+docker run --volume $HOME:$HOME --workdir $PWD my-image \
+  salmon index -t $HOME/projects/hack17-course/data/ggal/ggal_1_48850000_49020000.Ggal71.500bpflank.fa -i index
+```
+
+### Step 9 - Upload the container in the Docker Hub (bonus)
+
+Publish your container in the Docker Hub to share it with other people. 
+
+Create an account in the https://hub.docker.com web site. Then from your shell terminal run 
+the following command, entering the user name and password you specified registering in the Hub: 
+
+```
+docker login 
+``` 
+
+Tag the image with your Docker user name account: 
+
+```
+docker tag my-image <user-name>/my-image 
+```
+
+Finally push it to the Docker Hub:
+
+```
+docker push <user-name>/my-image 
+```
+
+After that anyone will be able to download it by using the command: 
+
+```
+docker pull <user-name>/my-image 
+```
