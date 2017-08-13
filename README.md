@@ -392,8 +392,140 @@ In this step you have learned:
 1. How write or use existing custom script in your Nextflow pipeline.
 2. How avoid the use of absolute paths having your script in the `bin/` project folder.
 
-=======
 
+
+### Step 9 - Executors  
+
+Real world genomic application can spawn the execution of thousands of jobs. In this 
+scenario a batch scheduler is commonly used to deploy the pipeline execution in a
+computing cluster, allowing the run of many jobs in parallel across many computers. 
+
+Nextflow has built-in support for most common used batch scheduler such Univa Grid Engine 
+and SLURM between the [others](https://www.nextflow.io/docs/latest/executor.html).  
+
+To run your pipeline with a batch scheduler modify the `nextflow.config` file specifying 
+the target executor and the required computing resources if needed. For example: 
+
+```
+process.executor = 'slurm'
+process.queue = 'short'
+process.memory = '10 GB' 
+process.time = '30 mins'
+process.cpus = 8 
+```
+
+The above configuration specify the use the SLURM batch scheduler to run the 
+jobs spawned by your pipeline script, then specifies to use the `short` queue (partition), 
+10 gigabyte of memory and 8 cpus per jobs, and each job can run no more than 30 minutes. 
+
+Note: the pipeline must be executed in a shared file system accessible to all the computing 
+nodes. 
+
+#### Exercise 9.1 
+
+Modify the configuration file to specify different resource request for
+the `quantification` process. 
+
+Tip: see the [process](https://www.nextflow.io/docs/latest/config.html#scope-process) documentation for an example. 
+
+
+#### Recap 
+
+In this step you have learned: 
+
+1. How to deploy a pipeline execution in a computing cluster. 
+2. How to specify different computing resources for different pipeline processes. 
+
+
+### Step 10 - Use configuration profiles 
+
+The Nextflow configuration file can be organised in different profiles 
+to allow the specification of separate setting depending the target execution environments. 
+
+For the same of this tutorial modify the `nextflow.config` as shown below: 
+
+
+```
+profiles {
+  standard {
+    process.container = 'nextflow/rnaseq-nf'
+    docker.enabled = true
+  }
+  
+  cluster {
+    process.executor = 'slurm'
+    process.queue = 'short'
+    process.memory = '10 GB' 
+    process.time = '30 mins'
+    process.cpus = 8     
+  }
+} 
+```
+
+The above configuration defines two profiles: `standard` and `cluster`. The name of the 
+profile to use can be specified when running the pipeline script by using the `-profile` 
+option. For example: 
+
+```
+nextflow run script7.nf -profile cluster 
+```
+
+The profile `standard` is used by default is other profile is specified by the used. 
+
+
+#### Recap 
+
+In this step you have learned: 
+
+1. How organise your pipeline configuration is separate profiles
+
+
+### Step 11 - Run a pipeline from a GitHub repository 
+
+Nextflow allows the execution of a pipeline project directly from a GitHub 
+repository (or similar services eg. BitBucket and GitLab). 
+
+This simplifies the sharing and the deployment of complex project, with having 
+to deal with the single file management and tracking changes in a consistent manner. 
+
+For the sake of this tutorial consider the example project published in the following URL: 
+
+https://github.com/nextflow-io/hello
+
+You can run it by specifying the project name as shown below: 
+
+```
+nextflow run nextflow-io/hello
+```
+
+It automatically downloads it and store in the `$HOME/.nextflow` folder. 
+
+Use the command `info` to show the project information, e.g.: 
+
+```
+nextflow info nextflow-io/hello
+```
+
+Nextflow allows the execution of a specific *revision* of your project by using the `-r` 
+command line option. For Example: 
+
+```
+nextflow run -r v1.2 nextflow-io/hello
+```
+
+Revision are any Git tag or branch defined in the project repository. 
+
+This allows a precise control of the changes in your project files and dependencies over time. 
+
+ 
+### Step 12 (bonus) - Deposit your pipeline scripts in a GitHub repository 
+
+Create a new repository in your GitHub account and upload there the pipeline scripts 
+of this tutorial. Then execute it specifying its name on the Nextflow command line.  
+
+Tip: see the [documentation](https://www.nextflow.io/docs/latest/sharing.html#publishing-your-pipeline) 
+for further details.  
+ 
 
 ## Docker hands-on 
 
@@ -697,3 +829,37 @@ The above command automatically download the Debian Docker image and converts it
 a Singularity image store in the current directory with the name `debian-wheezy.img`.
 
  
+### Run a Nextflow script using a Singularity container 
+ 
+Nextflow allows the transparent usage of Singularity containers as easy as with 
+Docker ones. 
+ 
+It only requires to enable the use of Singularity engine in place of Docker in the 
+Nextflow configuration file. 
+ 
+To run your previous script with Singularity add the following profile 
+in the `nextflow.config` file in the `$HOME/hack17-course` directory: 
+
+
+```
+profiles {
+
+  foo {
+    process.container = 'docker://nextflow/rnaseq-nf'
+    singularity.enabled = true
+    singularity.cacheDir = "$PWD"
+  }
+}
+```
+
+The above configuration instructs nextflow to use Singularity engine to run 
+your script processes. The container is pulled from the Docker registry and cached 
+in the current directory to be used for further runs. 
+
+Try to run the script as shown below: 
+
+```
+nextflow run script7.nf -profile foo 
+```
+  
+  
