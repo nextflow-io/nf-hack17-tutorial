@@ -160,7 +160,7 @@ nextflow run script3.nf
 It will print an output similar to the one shown below:
 
 ```
-[ggal_gut, [/../data/ggal/ggal_gut_1.fq, /../data/ggal/ggal_gut_2.fq]]
+[ggal_gut, [/../data/ggal/gut_1.fq, /../data/ggal/gut_2.fq]]
 ```
 
 The above example shows how the `read_pairs_ch` channel emits tuples composed by 
@@ -686,7 +686,7 @@ Try to run Bowtie in the container with the following command:
 
 ```
 docker run my-image \
-  salmon index -t $HOME/hack17-course/data/ggal/ggal_1_48850000_49020000.Ggal71.500bpflank.fa -i index
+  salmon index -t $PWD/data/ggal/transcriptome.fa -i index
 ```
 
 The above command fails because Salmon cannot access the input file.
@@ -697,7 +697,7 @@ it cannot access the hosting file system by default.
 You will need to use the `--volume` command line option to mount the input file(s) eg. 
 
 ```
-docker run --volume $HOME/hack17-course/data/ggal/ggal_1_48850000_49020000.Ggal71.500bpflank.fa:/transcriptome.fa my-image \
+docker run --volume $PWD/data/ggal/transcriptome.fa:/transcriptome.fa my-image \
   salmon index -t /transcriptome.fa -i index 
 ```
 
@@ -706,7 +706,7 @@ this allows you to use the same path when running it in the container eg.
 
 ```
 docker run --volume $HOME:$HOME --workdir $PWD my-image \
-  salmon index -t $HOME/hack17-course/data/ggal/ggal_1_48850000_49020000.Ggal71.500bpflank.fa -i index
+  salmon index -t $PWD/data/ggal/transcriptome.fa -i index
 ```
 
 ### Step 9 - Upload the container in the Docker Hub (bonus)

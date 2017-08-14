@@ -1,6 +1,3 @@
 .git
 .nextflow
-bin
-data
-work
-results
+*
