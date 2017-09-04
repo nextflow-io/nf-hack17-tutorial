@@ -8,6 +8,20 @@ This repository contains the tutorial material for the [Nextflow workshop](https
 * Docker engine 1.10.x (or higher) 
 * Singularity 2.3.x (optional)
 
+## Setup the AWS account 
+
+1. SSH in the login node: 
+
+     `ssh <login AWS instance>`
+    
+2. Launch your AWS instance  
+
+   `eval  "$(curl -L https://goo.gl/1C3abb)"`
+   
+3. Open a new shell terminal and SSH to the new instance  
+
+   `ssh -X <instance name printed by the previous command>`
+   
 ## Installation 
 
 Install Nextflow by using the following command: 
