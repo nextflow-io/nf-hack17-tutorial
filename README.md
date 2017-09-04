@@ -40,7 +40,7 @@ mv nextflow $HOME/bin
 Finally, clone this repository with the following command: 
 
 ```
-git clone https://github.com/nextflow-io/hack17-course.git && cd hack17-course
+git clone https://github.com/nextflow-io/hack17-tutorial.git && cd hack17-tutorial
 ```
 
 ## Nextflow hands-on 
@@ -69,8 +69,8 @@ nextflow run script1.nf --reads this/and/that
 
 #### Exercise 1.1 
 
-Modify the `script1.nf` to accept a fourth parameter named `outdir` set to the default path
-which will define used as the pipeline output directory. 
+Modify the `script1.nf` adding a fourth parameter named `outdir` and set it to a default path
+that will be used as the pipeline output directory. 
 
 #### Exercise 1.2 
 
@@ -87,7 +87,7 @@ In this step you have learned:
 1. How to define parameters in your pipeline script
 2. How to pass parameters by using the command line
 3. The use of `$var` and `${var}` variable placeholders 
-4. How use multiline strings 
+4. How to use multiline strings 
 
 
 ### Step 2 - Create transcriptome index file
@@ -99,12 +99,12 @@ the process [inputs](https://www.nextflow.io/docs/latest/process.html#inputs),
 the process [outputs](https://www.nextflow.io/docs/latest/process.html#outputs)
 and finally the command [script](https://www.nextflow.io/docs/latest/process.html#script). 
 
-The second example adds the `index` process. Open to the to see how the process is defined. 
+The second example adds the `index` process. Open it to see how the process is defined. 
 
-It takes the transcriptome file as input and creates the genome index by using the `salmon` tool. 
+It takes the transcriptome file as input and creates the transcriptome index by using the `salmon` tool. 
 
 Note how the input declaration defines a `transcriptome` variable in the process context 
-that it's is used in the command script to reference that file in the Salmon command line.
+that it is used in the command script to reference that file in the Salmon command line.
 
 Try to run it by using the command: 
 
@@ -112,7 +112,7 @@ Try to run it by using the command:
 nextflow run script2.nf
 ```
 
-The execution will fail because Salmon is not installed in the your environment. 
+The execution will fail because Salmon is not installed in your environment. 
 
 Add the command line option `-with-docker` to launch the execution through a Docker container
 as shown below: 
@@ -151,13 +151,13 @@ In this step you have learned:
 1. How to define a process executing a custom command
 2. How process inputs are declared 
 3. How process outputs are declared
-4. How access the number of available CPUs
-5. How print the content of a channel
+4. How to access the number of available CPUs
+5. How to print the content of a channel
 
 
 ### Step 3 - Collect read files by pairs
 
-This step shows how to match *read* files into pairs, so thay can be mapped by *Salmon*. 
+This step shows how to match *read* files into pairs, so they can be mapped by *Salmon*. 
 
 Edit the script `script3.nf` and add the following statement as the last line: 
 
@@ -202,9 +202,9 @@ to check if the `read_pairs_ch` contains at least an item.
 
 In this step you have learned: 
 
-1. How use `fromFilePairs` to handle read pair files
-2. How use the `set` operator to define a new channel variable 
-3. How use the `ifEmpty` operator to check if a channel is empty
+1. How to use `fromFilePairs` to handle read pair files
+2. How to use the `set` operator to define a new channel variable 
+3. How to use the `ifEmpty` operator to check if a channel is empty
 
 
 ### Step 4 - Perform expression quantification 
@@ -214,7 +214,7 @@ The script `script4.nf` adds the `quantification` process.
 In this script note as the `index_ch` channel, declared as output in the `index` process, 
 is now used as a channel in the input section.  
 
-Also note as the second input is declared as a `set` composed by two components: 
+Also note as the second input is declared as a `set` composed by two elements: 
 the `pair_id` and the `reads` in order to match the structure of the items emitted 
 by the `read_pairs_ch` channel.
 
@@ -242,11 +242,11 @@ Try to execute it with more read files as shown below:
 nextflow run script4.nf -resume --reads 'data/ggal/*_{1,2}.fq'
 ```
 
-You will noticed that the `quantification` process is executed more than 
+You will notice that the `quantification` process is executed more than 
 one time. 
 
 Nextflow parallelise the execution of your pipeline simply by providing multiple input data
-in your script.
+to your script.
 
 
 #### Exercise 4.1 
@@ -258,7 +258,7 @@ Add a [tag](https://www.nextflow.io/docs/latest/process.html#tag) directive to t
 #### Exercise 4.2 
 
 Add a [publishDir](https://www.nextflow.io/docs/latest/process.html#publishdir) directive 
-to the `quantification` process to output the process result into a directory of your 
+to the `quantification` process to store the process results into a directory of your 
 choice. 
 
 #### Recap 
