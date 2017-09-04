@@ -265,10 +265,10 @@ choice.
 
 In this step you have learned: 
  
-1. How connect two processes by using the channel declarations
-2. How resume the script execution skipping the execution of steps already computed 
-3. How use the `publishDir` to output a process result in a path of your choice 
-4. How use the `tag` directive to provide a more readable execution output
+1. How to connect two processes by using the channel declarations
+2. How to resume the script execution skipping already already computed steps 
+3. How to use the `tag` directive to provide a more readable execution output
+4. How to use the `publishDir` to store a process results in a path of your choice 
 
 
 ### Step 5 - Quality control 
@@ -340,7 +340,7 @@ This step shows how to execute an action when the pipeline completes the executi
 
 Note that Nextflow processes define the execution of *asynchronous* tasks i.e. they are not 
 executed one after another as they are written in the pipeline script as it would happen in a 
-common *iperative* programming language.
+common *imperative* programming language.
 
 The script uses the `workflow.onComplete` event handler to print a confirmation message 
 when the script completes. 
@@ -403,18 +403,18 @@ nextflow run script7.nf -resume --reads 'data/ggal/*_{1,2}.fq'
 
 In this step you have learned: 
 
-1. How write or use existing custom script in your Nextflow pipeline.
-2. How avoid the use of absolute paths having your script in the `bin/` project folder.
+1. How to write or use existing custom script in your Nextflow pipeline.
+2. How to avoid the use of absolute paths having your scripts in the `bin/` project folder.
 
 
 
 ### Step 9 - Executors  
 
 Real world genomic application can spawn the execution of thousands of jobs. In this 
-scenario a batch scheduler is commonly used to deploy the pipeline execution in a
-computing cluster, allowing the run of many jobs in parallel across many computers. 
+scenario a batch scheduler is commonly used to deploy a pipeline in a computing cluster, 
+allowing the execution of many jobs in parallel across many computing nodes. 
 
-Nextflow has built-in support for most common used batch scheduler such Univa Grid Engine 
+Nextflow has built-in support for most common used batch schedulers such as Univa Grid Engine 
 and SLURM between the [others](https://www.nextflow.io/docs/latest/executor.html).  
 
 To run your pipeline with a batch scheduler modify the `nextflow.config` file specifying 
