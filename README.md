@@ -20,7 +20,7 @@ This repository contains the tutorial material for the [Nextflow workshop](https
    
 3. Open a new shell terminal and SSH to the new instance  
 
-   `ssh -X <instance name printed by the previous command>`
+   `ssh <instance name printed by the previous command>`
    
 ## Installation 
 
@@ -78,7 +78,7 @@ Modify the `script1.nf` to print all the pipeline parameters by using a single `
 command and a [multiline string](https://www.nextflow.io/docs/latest/script.html#multi-line-strings)
 statement.  
 
-Tip: see an example [here](https://github.com/nextflow-io/rnaseq-nf/blob/master/main.nf#L41-L48).
+Tip: see an example [here](https://github.com/nextflow-io/rnaseq-nf/blob/3b5b49f/main.nf#L41-L48).
 
 #### Recap 
 
@@ -294,7 +294,7 @@ Channel `read_pairs_ch` has been used twice as an input by process `fastqc` and 
 Modify the creation of the `read_pairs_ch` channel by using a [into](https://www.nextflow.io/docs/latest/operator.html#into) 
 operator in place of a `set`.  
 
-Tip: see an example [here](https://github.com/nextflow-io/rnaseq-nf/blob/master/main.nf#L58).
+Tip: see an example [here](https://github.com/nextflow-io/rnaseq-nf/blob/3b5b49f/main.nf#L58).
 
 
 #### Recap 
