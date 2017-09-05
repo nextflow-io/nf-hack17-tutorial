@@ -12,7 +12,7 @@ This repository contains the tutorial material for the [Nextflow workshop](https
 
 1. SSH in the login node: 
 
-     `ssh <login AWS instance>`
+     `ssh login@52.215.251.199`
     
 2. Launch your AWS instance  
 
