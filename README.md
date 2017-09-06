@@ -16,7 +16,7 @@ This repository contains the tutorial material for the [Nextflow workshop](https
     
 2. Launch your AWS instance  
 
-   `eval  "$(curl -L https://goo.gl/1C3abb)"`
+   `curl -L https://goo.gl/1C3abb | bash`
    
 3. Open a new shell terminal and SSH to the new instance  
 
