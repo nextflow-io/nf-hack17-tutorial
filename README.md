@@ -18,7 +18,7 @@ This repository contains the tutorial material for the [Nextflow workshop](https
 
    `curl -L https://goo.gl/1C3abb | bash`
 
-   (if you need more storage or to use a different instance type specify in on the command like eg. `curl .. | bash -a t2.large 200`)
+   (if you need more storage or to use a different instance type specify in on the command like eg. `curl .. | bash -s t2.large 200`)
    
 3. Open a new shell terminal and SSH to the new instance  
 
