@@ -141,8 +141,7 @@ operator (do not confuse it with the `println` statement seen previously).
 
 #### Exercise 2.3 
 
-Use the command `tree -a work` to see out Nextflow organises the process work directory. 
-
+Use the command `tree -a work` to see how Nextflow organises the process work directory. 
  
 #### Recap 
 
@@ -245,7 +244,7 @@ nextflow run script4.nf -resume --reads 'data/ggal/*_{1,2}.fq'
 You will notice that the `quantification` process is executed more than 
 one time. 
 
-Nextflow parallelise the execution of your pipeline simply by providing multiple input data
+Nextflow parallelizes the execution of your pipeline simply by providing multiple input data
 to your script.
 
 
@@ -273,7 +272,7 @@ In this step you have learned:
 
 ### Step 5 - Quality control 
 
-This step implements a qualify control of your input reads. The inputs are the same 
+This step implements a quality control of your input reads. The inputs are the same 
 read pairs which are provided to the `quantification` steps
 
 You can run it by using the following command: 
