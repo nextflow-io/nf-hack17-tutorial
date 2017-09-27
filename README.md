@@ -375,7 +375,7 @@ mkdir fastqc_${sample_id}_logs
 fastqc -o fastqc_${sample_id}_logs -f fastq -q ${reads}
 ```
 
-Save it, grant the execute permission and move it in the `bin` directory (in the project root) as shown below: 
+Save it, grant the execute permission and move it in the `bin` directory as shown below: 
 
 ```
 chmod +x fastqc.sh
