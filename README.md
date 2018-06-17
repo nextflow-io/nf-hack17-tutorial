@@ -770,7 +770,7 @@ docker pull nextflow/rnaseq-nf@sha256:aeacbd7ea1154f263cda972a96920fb228b2033544
 ## Singularity 
 
 [Singularity](http://singularity.lbl.gov) is container runtime designed to work in HPC data center, where the usage
-of Docker is generally not allowed due to security contraints 
+of Docker is generally not allowed due to security constraints. 
 
 Singularity implements the container execution model similarly to Docker however using 
 a complete different implementation design.
