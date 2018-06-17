@@ -4,7 +4,7 @@ This repository contains the tutorial material for the [Nextflow workshop](https
 
 ## Prerequisite
 
-* Java 7 or 8 
+* Java 8 or later 
 * Docker engine 1.10.x (or higher) 
 * Singularity 2.3.x (optional)
 
